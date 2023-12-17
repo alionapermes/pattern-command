@@ -1,19 +1,20 @@
 package app
 
 import (
-	"fyne.io/fyne/v2"
 	fyneApp "fyne.io/fyne/v2/app"
-	"fyne.io/fyne/v2/widget"
+
+	"pattern-command/command"
+	"pattern-command/ui"
 )
 
 type App struct {
-	mainWindow     fyne.Window
 	commandManager *commandManager
+	ui             *ui.UI
 }
 
 func New(title string) *App {
 	app := &App{
-		mainWindow:     fyneApp.New().NewWindow(title),
+		ui:             ui.NewUI(fyneApp.New(), title),
 		commandManager: newCommandManager(),
 	}
 
@@ -21,14 +22,39 @@ func New(title string) *App {
 }
 
 func (self *App) Start() error {
-	self.mainWindow.SetFullScreen(true)
-
-	self.mainWindow.ShowAndRun()
+	self.ui.Run()
 	return nil
 }
 
 func (self *App) setup() *App {
-	self.mainWindow.SetContent(widget.NewLabel("Hello World!"))
+	self.ui.RegisterBtn("Create", func() {
+		cmd := command.NewCreateCommand(self.ui)
+		self.commandManager.do(cmd)
+	})
 
+	self.ui.RegisterBtn("Delete", func() {
+		cmd := command.NewDeleteCommand(self.ui, nil)
+		self.commandManager.do(cmd)
+	})
+
+	self.ui.RegisterBtn("Move", func() {
+		cmd := command.NewMoveCommand(self.ui, nil)
+		self.commandManager.do(cmd)
+	})
+
+	self.ui.RegisterBtn("Scale", func() {
+		cmd := command.NewScaleCommand(self.ui, nil)
+		self.commandManager.do(cmd)
+	})
+
+	self.ui.RegisterBtn("ReDo", func() {
+		self.commandManager.redo()
+	})
+
+	self.ui.RegisterBtn("UnDo", func() {
+		self.commandManager.undo()
+	})
+
+	self.ui.Setup()
 	return self
 }

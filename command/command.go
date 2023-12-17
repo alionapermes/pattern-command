@@ -1,7 +1,25 @@
 package command
 
-import "command-gui/object"
+import (
+	"fyne.io/fyne/v2"
+
+	"pattern-command/ui"
+)
 
 type Command interface {
-	Execute(object.Object)
+	Do()
+	UnDo()
+	ReDo()
+
+	SetTarget(target fyne.CanvasObject)
+}
+
+type baseCommand struct {
+	*ui.UI
+
+	target fyne.CanvasObject
+}
+
+func (self *baseCommand) SetTarget(target fyne.CanvasObject) {
+	self.target = target
 }

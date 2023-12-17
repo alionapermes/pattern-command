@@ -6,7 +6,7 @@ import (
 	"pattern-command/app"
 )
 
-const mainWindowTitle = "commands-gui-app"
+const mainWindowTitle = "pattern-command-gui"
 
 func main() {
 	commandsApp := app.New(mainWindowTitle)
